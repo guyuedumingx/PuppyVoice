@@ -7,6 +7,8 @@ import jieba
 import win32gui
 import win32con
 import pyttsx3
+import cv2
+import threading
 import os
 
 
@@ -323,8 +325,48 @@ class Software(Window):
         return True
 
 
-class ExternalDevice(MetaModule):
+class Camera(Window):
+    """
+    操作电脑的摄像头
+    """
+    def launch(self, handler):
+        self.screen = cv2.VideoCapture(0)
+        thread = threading.Thread(target=self.capture)
+        self.isRunning = True
+        thread.start()
+        handler.output("{},启动成功".format(self.name))
+        return True
 
+    def exit(self, handler):
+        #关闭摄像头
+        self.isRunning = False
+        handler.output("{},关闭成功".format(self.name))
+        return True
+    
+    def shot(self, handler):
+        cv2.imwrite("shot.jpg",self.img)
+        handler.output("拍照成功")
+        return True
+
+    def capture(self):
+        while self.screen.isOpened() and self.isRunning:
+            #img即为
+            sucess,img=self.screen.read()
+            self.img = cv2.flip(img, 1)
+            #显示摄像头
+            cv2.imshow(self.searchWord, img)
+            #保持画面的持续。
+            k=cv2.waitKey(1)
+            if not self.isRunning:
+                break
+        cv2.destroyAllWindows()
+        self.screen.release()
+    
+
+class ExternalDevice(MetaModule):
+    """
+    适用于外围设备的接口
+    """
     def initialize(self, config):
         self.host = config.get('host','')
         self.port = config.get('port',8899)

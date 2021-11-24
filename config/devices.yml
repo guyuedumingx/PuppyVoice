@@ -17,6 +17,20 @@ Typora:
   type: Software
   instruction: 我现在可以操作笔记了哦
 
+Xmind:
+  keywords:
+    - 导图
+    - 思维导图
+  execPath: C:\Program Files\XMind\XMind.exe
+  type: Software
+  instruction: 我现在可以操作导图了哦
+
+相机:
+  keywords:
+    - 相机
+    - 摄像头
+  searchWord: camera
+  type: Camera
 
 
   

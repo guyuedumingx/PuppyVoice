@@ -72,3 +72,21 @@ Software:
         - 打开
       method: self.launch
 
+Camera:
+  operations:
+    - 
+      keys:
+        - 启动
+        - 打开
+      method: self.launch
+    - 
+      keys:
+        - 关闭
+        - 退出
+      method: self.exit
+    - 
+      keys:
+        - 拍照
+      method: self.shot
+
+
