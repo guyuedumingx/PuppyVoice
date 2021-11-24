@@ -1,16 +1,18 @@
-Device1:
-  keywords:
-    - 窗口
-    - 显示
-  type: Window
-
 Device2:
   keywords:
-    - 灯
     - 二号灯
   type: ExternalDevice
+  instruction: 这是二号灯
   host: 192.168.0.1
   port: 8888
+
+Wechat:
+  keywords:
+    - 微信
+  type: Window
+  searchWord: 微信
+  instruction: 我可以操作微信哦
+
 
   
 

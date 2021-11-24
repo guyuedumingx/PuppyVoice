@@ -1,7 +1,11 @@
 # 内置的module
 from copy import deepcopy
+import re
 from assistantlib.configuration import Configuration
 import jieba
+import win32gui
+import win32con
+import pyttsx3
 
 configuration = Configuration()
 
@@ -9,12 +13,13 @@ configuration = Configuration()
 class MetaModule:
 
     def __init__(self, config):
-        self.build({})
+        self._build({})
         self.name = config.get('name', '')
-        self.keywords = config.get('keywords',[])
+        self.keywords = set(config.get('keywords',[]))
+        self.instruction = config.get('instruction','这是一个组件')
         self.initialize(config)
     
-    def build(self, operations):
+    def _build(self, operations):
         """
         类内部的初始化过程
         这个过程中会读取配置文件
@@ -33,12 +38,12 @@ class MetaModule:
         except:
             hasScan = False
         if not hasScan:
-            self.build_configuration(cls, operations)
+            self._build_configuration(cls, operations)
         self.index -= 1
         if self.index >= 0:
-            self.mro[self.index].build(self,deepcopy(cls.operations))
+            self.mro[self.index]._build(self,deepcopy(cls.operations))
 
-    def build_configuration(self, cls, operations):
+    def _build_configuration(self, cls, operations):
         """
         关键词配置初始化
         """
@@ -46,7 +51,7 @@ class MetaModule:
         cls.operations = {}
         # 展开配置
         for item in configs:
-            cls.operations = dict(cls.operations, **self.build_sub(item))
+            cls.operations = dict(cls.operations, **self._build_sub(item))
         # 合并父配置
         for key,value in cls.operations.items():
             if operations.__contains__(key):
@@ -55,28 +60,43 @@ class MetaModule:
         cls.operations = operations
         cls.clsName = cls.__name__
 
-    def build_sub(self, item):
+    def _build_sub(self, item):
         operations = {}
         if item.__contains__('operations'):
+            operas = {}
             for sub in item['operations']:
-                operas = self.build_sub(sub)
-                for key in item['keys']:
-                    jieba.add_word(key)
-                    operations[key] = ModuleOperation(key, sub=operas)
+                operas = dict(operas, **self._build_sub(sub))
+            for key in item['keys']:
+                jieba.add_word(key)
+                operations[key] = ModuleOperation(key, sub=operas)
         else:
             for key in item['keys']:
                 jieba.add_word(key)
                 operations[key] = ModuleOperation(key, method=item.get('method'))
         return operations
     
-    def handle(self, handler):
-        if self.operations.__contains__(handler.opera):
-            print(self.operations[handler.opera])
+    def action(self, handler):
+        return self._execHandle(handler, self.operations)
+    
+    def _execHandle(self, handler, operations):
+        match = handler.opera & set(operations.keys())
+        if len(match) > 0:
+            key = match.pop()
+            handler.matchs.append(key)
+            opera = operations[key]
+            if opera.hasSub():
+                return self._execHandle(handler, opera.sub)
+            elif opera.hasMethod():
+                return eval(opera.method)(handler)
+        return False
 
     def initialize(self, config):
         """
         自定义的初始化过程
         """
+    
+    def show_instruction(self, handler):
+        handler.output(self.instruction)
 
 
 class ModuleOperation:
@@ -117,9 +137,164 @@ class ModuleOperation:
         return "\nmethod:{}\nsub:{}\n".format(self.method, self.sub)
     __repr__ = __str__
 
+class Puppy(MetaModule):
+    """
+    小狗语音助手
+    """
+    def initialize(self, config):
+        self.engine = pyttsx3.init()
+
+    def show(self, msg):
+        self.engine.say(msg)
+        self.engine.runAndWait()
+    
+    def get_all_voices(self):
+        return self.engine.getProperty("voices")
+    
+    def rate_up(self, handler):
+        rate = self.engine.getProperty('rate')
+        self.engine.setProperty('rate',rate+50)
+        handler.output(handler.matchs[-1]+handler.matchs[-2]+"成功!")
+        return True
+
+    def rate_down(self, handler):
+        rate = self.engine.getProperty('rate')
+        self.engine.setProperty('rate',rate-50)
+        handler.output(handler.matchs[-1]+handler.matchs[-2]+"成功!")
+        return True
+    
+    def volume_up(self, handler):
+        volume = self.engine.getProperty('volume')
+        self.engine.setProperty('volume', volume+0.5)
+        handler.output(handler.matchs[-1]+handler.matchs[-2]+"成功!")
+        return True
+
+    def volume_down(self, handler):
+        volume = self.engine.getProperty('volume')
+        self.engine.setProperty('volume', volume-0.25)
+        handler.output(handler.matchs[-1]+handler.matchs[-2]+"成功!")
+        return True
 
 class Window(MetaModule):
-    pass
+    """
+    windows的窗口模块，可以用来操作windows窗口
+    """
+    hwnd_title = dict()
+
+    def initialize(self, config):
+        Window._load()
+        self.searchWord = config.get('searchWord','')
+
+    @classmethod
+    def _load(cls, refresh=False):
+        if(len(cls.hwnd_title.keys()) == 0 or refresh):
+            cls.hwnd_title.clear()
+            win32gui.EnumWindows(Window.get_all_hwnd, 0)
+
+    @classmethod
+    def get_all_hwnd(cls, hwnd, mouse):
+        if win32gui.IsWindow(hwnd) and win32gui.IsWindowEnabled(hwnd) and win32gui.IsWindowVisible(hwnd):
+            cls.hwnd_title.update({hwnd:win32gui.GetWindowText(hwnd)})
+    
+    def do_window_action(self, handler, type):
+        """
+        执行窗口操作
+        """
+        key = handler.matchs[-1]
+        try:
+            h = self.handle
+        except:
+            success, h = self.get_handle(handler, key)
+            if not success:
+                handler.output("{}窗口, 失败!".format(key+self.name))
+                return True
+        win32gui.ShowWindow(h, type)
+        handler.output("{}窗口, 成功!".format(key+self.name))
+        return True
+    
+    def post_message_to_window(self, handler, type):
+        """
+        发送信息到窗口
+        """
+        key = handler.matchs[-1]
+        try:
+            handle = self.handle
+        except:
+            self._load(refresh=True)
+            success, handle = self.get_handle(handler, key)
+            if not success:
+                handler.output("{}窗口, 失败!".format(key+self.name))
+                return False
+        try:
+            win32gui.PostMessage(handle,type)
+            handler.output("{}窗口, 成功!".format(key+self.name))
+            return True
+        except:
+            handler.output("{}窗口, 失败!请确认窗口是否存在!".format(key+self.name))
+            return False
+
+    def window_exit(self, handler):
+        back = self.post_message_to_window(handler, win32con.WM_CLOSE)
+        self.hwnd_title.pop(self.handle)
+        try:
+            delattr(self, "handle")
+        except:
+            pass 
+        return back
+    
+    def get_handle(self, handler, key):
+        """
+        子类只需要复写这个方法就好了
+        """
+        try:
+            searchWord = self.searchWord
+        except:
+            searchWord = self.name
+        success, h = self.get_handle_by_keyword(searchWord)
+        if success:
+            self.handle = h
+            return True, h
+        return False, h
+    
+    def get_handle_by_keyword(self, searchWord, repl=True):
+        searchWord = searchWord.strip()
+        """
+        根据关键词获取窗口句柄
+        repl: 是否使用正则表达式来搜索句柄中的字串
+        """
+        if searchWord in ["", " "]:
+            return False, -1
+        self._load(refresh=True)
+        for h, t in self.__class__.hwnd_title.items():
+            if t != '':
+                if repl:
+                    try:
+                        if re.search(searchWord, t,re.I):
+                            return True, h
+                    except:
+                        continue
+                elif searchWord in t:
+                    return True, h
+
+        return False, -1
+
+    def window_show(self, handler):
+        return self.do_window_action(handler,win32con.SW_SHOWNORMAL)
+
+    def window_hide(self, handler):
+        return self.do_window_action(handler, win32con.SW_SHOWMINIMIZED)
+    
+    def window_maximize(self, handler):
+        return self.do_window_action(handler, win32con.SW_SHOWMAXIMIZED)
+
+    
+    # def show_all(self, handler, key):
+    #     self._load(refresh=True)
+    #     for h,t in Window.hwnd_title.items():
+    #         if t != "":
+    #             handler.output((h,t), 'console') 
+    #     return True
+
 
 
 class NormalWindow(Window):

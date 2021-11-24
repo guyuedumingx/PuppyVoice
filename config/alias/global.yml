@@ -3,23 +3,65 @@ MetaModule:
     -
       keys:
         - 说明
-      method: self.instu
+      method: self.show_instruction
       
 Window:
   operations:
     -
       keys:
-        - 说明
+        - 窗口
+        - 界面
       operations:
         -
           keys:
-            - 大家
-            - 所有
-          operations:
-            - 
-              keys:
-                - 好
-              method: self.good
+            - 显示
+            - 正常化
+          method: self.window_show
+        - 
+          keys:
+            - 隐藏
+            - 最小化
+          method: self.window_hide
+        -
+          keys:
+            - 最大化
+            - 放大
+          method: self.window_maximize
+        - 
+          keys:
+            - 关闭
+            - 退出
+          method: self.window_exit
+
+Puppy:
+  operations:
+    - 
+      keys:
+        - 音量
+        - 声音
+      operations:
+        -
+          keys:
+            - 提高
+          method: self.volume_up
+        -
+          keys:
+            - 降低
+          method: self.volume_down
+    -
+      keys:
+        - 语速
+      operations:
+        - 
+          keys:
+            - 加快
+            - 提高
+          method: self.rate_up
+        - 
+          keys:
+            - 降低
+            - 减慢
+          method: self.rate_down
 
 NormalWindow:
   operations:
