@@ -1,0 +1,16 @@
+Device1:
+  keywords:
+    - 窗口
+    - 显示
+  type: Window
+
+Device2:
+  keywords:
+    - 灯
+    - 二号灯
+  type: ExternalDevice
+  host: 192.168.0.1
+  port: 8888
+
+  
+

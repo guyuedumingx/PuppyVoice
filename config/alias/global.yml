@@ -1,0 +1,30 @@
+MetaModule:
+  operations:
+    -
+      keys:
+        - 说明
+      method: self.instu
+      
+Window:
+  operations:
+    -
+      keys:
+        - 说明
+      operations:
+        -
+          keys:
+            - 大家
+            - 所有
+          operations:
+            - 
+              keys:
+                - 好
+              method: self.good
+
+NormalWindow:
+  operations:
+    - 
+      keys:
+        - 打开
+      method: self.open
+
