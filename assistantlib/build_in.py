@@ -2,6 +2,7 @@
 from copy import deepcopy
 import re
 from assistantlib.configuration import Configuration
+from pywinauto.keyboard import send_keys
 import jieba
 import win32gui
 import win32con
@@ -74,7 +75,10 @@ class MetaModule:
         else:
             for key in item['keys']:
                 jieba.add_word(key)
-                operations[key] = ModuleOperation(key, method=item.get('method'))
+                if item.__contains__('method'):
+                    operations[key] = ModuleOperation(key, method=item.get('method'))
+                elif item.__contains__('shotkeys'):
+                    operations[key] = ModuleOperation(key, shotkeys=item.get('shotkeys'))
         return operations
     
     def action(self, handler):
@@ -90,6 +94,9 @@ class MetaModule:
                 return self._execHandle(handler, opera.sub)
             elif opera.hasMethod():
                 return eval(opera.method)(handler)
+            elif opera.hasShotKeys():
+                for key in opera.shotkeys:
+                    send_keys(key)
         return False
 
     def initialize(self, config):
@@ -103,17 +110,24 @@ class MetaModule:
 
 class ModuleOperation:
 
-    def __init__(self, keyword, method=None, sub=None):
+    def __init__(self, keyword, method=None, sub=None, shotkeys=None):
         # 字符串列表
         self.keyword = keyword
         # 方法名
         self.method = ''
         # ModuleConfigureItem列表
         self.sub = {}
+        # 发送快捷键列表
+        self.shotkeys = []
         if method != None:
             self.method = method
         if sub != None:
             self.sub = sub
+        if shotkeys != None:
+            self.shotkeys = shotkeys
+
+    def hasShotKeys(self):
+        return len(self.shotkeys) != 0
     
     def hasSub(self):
         return len(self.sub) != 0
@@ -305,8 +319,7 @@ class Software(Window):
 
     def launch(self, handler):
         os.startfile(self.execPath)
-        # self._load(refresh=True)
-        handler.output("{},{}成功".format(handler.matchs[-1], self.name))
+        handler.output("{},{} 成功!".format(handler.matchs[-1], self.name))
         return True
 
 

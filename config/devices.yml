@@ -6,12 +6,17 @@ Device2:
   host: 192.168.0.1
   port: 8888
 
-Wechat:
-  keywords:
-    - 微信
+微信:
   type: Window
-  searchWord: 微信
   instruction: 我可以操作微信哦
+
+Typora:
+  keywords:
+    - 笔记
+  execPath: F:\Typora\Typora.exe
+  type: Software
+  instruction: 我现在可以操作笔记了哦
+
 
 
   
