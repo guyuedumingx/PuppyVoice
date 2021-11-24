@@ -18,7 +18,7 @@ class Handler:
         })
         self.devices = [self.outputVoiceEngine]
         for name,config in configuration.devices.items():
-            config[name] = name
+            config['name'] = name
             self.devices.append(eval(config['type'])(config))
         self.add_keywords_to_jieba()
 
@@ -59,7 +59,15 @@ class Handler:
                 # 匹配的关键词
                 self.matchs = [match.pop()]
                 flag = device.action(self)
-                print(flag)
+                if flag:
+                    self.lastMatchDevice = device
+        if not flag:
+            try:
+                flag = self.lastMatchDevice.action(self)
+                if not flag:
+                    self.output("执行命令:{}, 失败!".format(self.words))
+            except:
+                self.output("执行命令:{}, 失败!".format(self.words))
 
     
     

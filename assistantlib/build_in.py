@@ -6,6 +6,8 @@ import jieba
 import win32gui
 import win32con
 import pyttsx3
+import os
+
 
 configuration = Configuration()
 
@@ -15,7 +17,7 @@ class MetaModule:
     def __init__(self, config):
         self._build({})
         self.name = config.get('name', '')
-        self.keywords = set(config.get('keywords',[]))
+        self.keywords = set(config.get('keywords',[self.name]))
         self.instruction = config.get('instruction','这是一个组件')
         self.initialize(config)
     
@@ -137,6 +139,7 @@ class ModuleOperation:
         return "\nmethod:{}\nsub:{}\n".format(self.method, self.sub)
     __repr__ = __str__
 
+
 class Puppy(MetaModule):
     """
     小狗语音助手
@@ -175,6 +178,7 @@ class Puppy(MetaModule):
         handler.output(handler.matchs[-1]+handler.matchs[-2]+"成功!")
         return True
 
+
 class Window(MetaModule):
     """
     windows的窗口模块，可以用来操作windows窗口
@@ -182,8 +186,9 @@ class Window(MetaModule):
     hwnd_title = dict()
 
     def initialize(self, config):
+        super().initialize(config)
         Window._load()
-        self.searchWord = config.get('searchWord','')
+        self.searchWord = config.get('searchWord',self.name)
 
     @classmethod
     def _load(cls, refresh=False):
@@ -204,7 +209,7 @@ class Window(MetaModule):
         try:
             h = self.handle
         except:
-            success, h = self.get_handle(handler, key)
+            success, h = self.get_handle(handler)
             if not success:
                 handler.output("{}窗口, 失败!".format(key+self.name))
                 return True
@@ -221,7 +226,7 @@ class Window(MetaModule):
             handle = self.handle
         except:
             self._load(refresh=True)
-            success, handle = self.get_handle(handler, key)
+            success, handle = self.get_handle(handler)
             if not success:
                 handler.output("{}窗口, 失败!".format(key+self.name))
                 return False
@@ -242,15 +247,11 @@ class Window(MetaModule):
             pass 
         return back
     
-    def get_handle(self, handler, key):
+    def get_handle(self, handler):
         """
         子类只需要复写这个方法就好了
         """
-        try:
-            searchWord = self.searchWord
-        except:
-            searchWord = self.name
-        success, h = self.get_handle_by_keyword(searchWord)
+        success, h = self.get_handle_by_keyword(self.searchWord)
         if success:
             self.handle = h
             return True, h
@@ -286,23 +287,33 @@ class Window(MetaModule):
     
     def window_maximize(self, handler):
         return self.do_window_action(handler, win32con.SW_SHOWMAXIMIZED)
-
     
     # def show_all(self, handler, key):
     #     self._load(refresh=True)
     #     for h,t in Window.hwnd_title.items():
     #         if t != "":
     #             handler.output((h,t), 'console') 
-    #     return True
 
 
+class Software(Window):
+    """
+    windows的软件模块，可以用来操作软件
+    """
+    def initialize(self, config):
+        super().initialize(config)
+        self.execPath = config.get('execPath','')
 
-class NormalWindow(Window):
-    pass
+    def launch(self, handler):
+        os.startfile(self.execPath)
+        # self._load(refresh=True)
+        handler.output("{},{}成功".format(handler.matchs[-1], self.name))
+        return True
 
 
 class ExternalDevice(MetaModule):
 
     def initialize(self, config):
         self.host = config.get('host','')
-        self.port = config.get('port',10000)
+        self.port = config.get('port',8899)
+
+

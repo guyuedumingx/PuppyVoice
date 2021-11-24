@@ -16,6 +16,7 @@ Window:
           keys:
             - 显示
             - 正常化
+            - 打开
           method: self.window_show
         - 
           keys:
@@ -63,10 +64,11 @@ Puppy:
             - 减慢
           method: self.rate_down
 
-NormalWindow:
+Software:
   operations:
     - 
       keys:
+        - 启动
         - 打开
-      method: self.open
+      method: self.launch
 
