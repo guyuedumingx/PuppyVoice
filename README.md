@@ -75,11 +75,57 @@ USER_CONFIGURATIONS = ["user-config.yml","website-config.json"]
         },
         {
             "keys":["全部"],
-            "do": "self.hole"
+            "method": "self.hole"
         }
     ]
 }
 ```
+
+```yml
+PowerPoint:
+  operations:
+    - 
+      keys:
+        - 新建
+      shotkeys:
+        - '^n'
+        - '%n'
+        - 'l'
+        - '1'
+    - 
+      keys:
+        - 最近
+      operations:
+        - 
+          keys:
+            - 打开
+          shotkeys:
+            - '%h'
+            - 'y'
+            - 'f'
+    - 
+      keys:
+        - 放映
+      operations:
+        - 
+          keys:
+            - 开始
+          shotkeys:
+            - '{F5}'
+    -
+      keys:
+        - 下一页
+        - 下一张
+      shotkeys:
+        - '{DONW}'
+    -
+      keys:
+        - 上一页
+        - 上一张
+      shotkeys:
+        - '{UP}'
+```
+
 这里的`打开`就可以分两种情况, 一种是`打开全部`, 另一种是`打开最近`  
 
 ### 快捷键列表  
