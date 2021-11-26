@@ -1,5 +1,6 @@
 from assistantlib.configuration import Configuration
 from assistantlib.build_in import *
+from config.constants import *
 import re
 
 configuration = Configuration()
@@ -37,7 +38,7 @@ class Handler:
             for key in device.keywords:
                 jieba.add_word(key)
     
-    def output(self, msg, mode='voice'):
+    def output(self, msg, mode=OUTPUT_MODE):
         if 'voice' == mode:
             self.outputVoiceEngine.show(msg)
         elif 'console' == mode:

@@ -1,11 +1,8 @@
 import json
 import os
 from copy import deepcopy
+from config.constants import *
 import yaml
-
-USER_CONFIGURATIONS = ['alias/global.yml']
-CONFIGURATION_PATH = 'config'
-DEVICES_FILE = 'devices.yml'
 
 class Singleton(object):
     def __init__(self, cls):
