@@ -76,12 +76,10 @@ Camera:
     - 
       keys:
         - 启动
-        - 打开
       method: self.launch
     - 
       keys:
         - 退出
-        - 关闭
       method: self.exit
     - 
       keys:
