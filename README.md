@@ -120,9 +120,5 @@ UP   ARROW                       {UP}
 `MetaModule`: 元组件，是所有组件的父类，定义了指令运行的逻辑  
 `ExternalDevice`: 外置组件，通过`socket`编程支持远程控制其他硬件  
 `Window`: 所有`window`窗口的公有父类  
-`NormalWindow`: 对所有未被特殊处理的窗口的统一支持,比如`显示微信窗口`  
 `Camera`: 提供了电脑本身摄像头的支持  
 `Software`: 所有软件的公有父类  
-`UiaSoftware`: 提供对所有以`uia`做后台的软件的同意支持  
-`ScreenCanvas`: 使用`pyqt5`的内置浏览器做后台的模拟浏览器，是本项目可以方便的集成前端的`svg`,`html`等等, 相当于把电脑显示器当成了一个`canvas`  
-`EelScreenCanvas`: 使用`eel`库作为后台的模拟浏览器，目前未完善  
