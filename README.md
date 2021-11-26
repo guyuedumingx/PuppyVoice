@@ -20,65 +20,18 @@ requirements.txt -- 项目所需的python依赖
 ### 配置  
 项目的所有配置文件都在`config`包里
 
-1. `configuration.json`文件是全局配置文件, 负责配置一些内置的指令  
+1. `alias/global.yml`文件是全局配置文件, 负责配置一些内置的指令  
 2. `constants.py`文件包含一些程序运行时需要的常量  
-3. `user-config.json`文件是用户自定义配置文件, 你可以在使用过程中根据需要进行配置  
+3. `user-config.yml`文件是用户自定义配置文件, 你可以在使用过程中根据需要进行配置  
 
 您可以自主添加需要的配置文件, 并在`config/constants.py`中添加即可  
 ```python  
-USER_CONFIGURATIONS = ["user-config.json","website-config.json"]
+USER_CONFIGURATIONS = ["user-config.yml","website-config.json"]
 ```
 
 ### 配置自己的指令  
 如果需要配置本身不存在的指令， 那么您可以选择自定义一个类(推荐您在`modules/user_modules.py`文件中定义)并继承元组件库中的对象，自定义需要的操作  
 例如：  
-
-`modules/user_modules.py`  
-```python  
-class PowerPoint(Software):
-    """
-    自定义软件PowerPoint，继承元组件 Software
-    """
-    def __init__(self, name='', config=None, configName='PowerPoint'):
-        """
-        PowerPoint的初始化操作
-        name: 软件实例的名称，配置文件中若没有配置keywords在默认使用name作为keyword
-        config: 自定义配置 / 一般不用
-        configName: 该软件在配置文件中的配置名, 省略时使用name来替代
-        """
-        # 读取配置
-        config = self.load_config(name,config, configName)
-        # 软件的私有配置
-        self.execPath = config.get('execPath','')
-
-        # 父类初始化， 形式基本固定 
-        super().__init__(
-            name=name,
-            config=config,
-            configName=configName
-        )
-        # 软件本身的初始化 和前面的区别是这里的PowerPoint是所有这个软件的实例都有的配置
-        self.initialize("PowerPoint")
-    
-    
-    def newppt(self, handle, key):
-        """
-        配置一个newppt操作，此操作会向powerpoint 依次发送alt+n , Shift+n , l , 1指令
-        用来打开一个空白ppt
-        """
-        send_keys('^n'
-        '%n'
-        'l'
-        '1'
-        )
-        # 语音播报
-        handle.output("{}".format(key))
-
-    def showppt(self, handle, key):
-        send_keys('{F5}'
-        )
-        handle.output("{}".format(key))
-```
 
 `config/user-config.json`
 ```json
@@ -109,8 +62,8 @@ class PowerPoint(Software):
 - `operations`: 这个类支持的指令  
     - `keys`: 指令的关键词  
     - `shotkeys`: 发送快捷键到窗口  
-    - `sub`: 多层指令，可以由父指令递归下去
-    - `do`: 执行的函数
+    - `operations`: 多层指令，可以由父指令递归下去
+    - `method`: 执行的函数
 
 ```json
 {
@@ -128,18 +81,6 @@ class PowerPoint(Software):
 }
 ```
 这里的`打开`就可以分两种情况, 一种是`打开全部`, 另一种是`打开最近`  
-
-最后，只需要在`server.py`文件中,
-
-`server.py`
-```python 
-ppt = PowerPoint("展示")
-
-modules = [
-    ppt
-]
-```
-把对象初始化并加入到`modules`列表中就可以了
 
 ### 快捷键列表  
 ```
