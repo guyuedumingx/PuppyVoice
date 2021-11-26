@@ -27,12 +27,6 @@ class Handler:
                     self.devices.append(eval(config['type'])(config))
 
         self.add_keywords_to_jieba()
-        
-        # self.chatbot = ChatBot("puppy")
-        # self.chatbot.set_trainer(ChatterBotCorpusTrainer)
-        
-        # 使用中文语料库训练它
-        # self.chatbot.train("chatterbot.corpus.chinese")
 
     
     def add_keywords_to_jieba(self):
@@ -80,7 +74,6 @@ class Handler:
                 pass
         if not flag:
             self.output("执行命令:{}, 失败!".format(self.words))
-            # self.output(self.chatbot.get_response(self.words))
 
     
     
