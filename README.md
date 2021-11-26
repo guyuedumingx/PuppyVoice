@@ -12,10 +12,6 @@
 ### 包详解  
 ```
 config -- 配置包
-modules -- 元件包  
-output -- 语音助手包  
-plugin -- 插件包， 可以导入其他的python 库并集成到助手中来
-utils -- 工具包，负责读取配置文件，配置语音助手等  
 handler.py -- 指令的分词并调用对应元件执行
 server.py -- 程序入口  
 requirements.txt -- 项目所需的python依赖  
@@ -178,7 +174,7 @@ UP   ARROW                       {UP}
 /                                {DIVIDE}
 ```
 
-### Modules包详解  
+### Build_in文件详解  
 
 `MetaModule`: 元组件，是所有组件的父类，定义了指令运行的逻辑  
 `ExternalDevice`: 外置组件，通过`socket`编程支持远程控制其他硬件  

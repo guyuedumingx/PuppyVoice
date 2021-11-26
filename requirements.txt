@@ -1,0 +1,15 @@
+chardet==4.0.0
+jieba==0.42.1
+librosa==0.8.1
+mediapipe==0.8.9
+opencv_python==4.5.4.58
+PyAudio==0.2.11
+pyttsx3==2.90
+pywin32==302
+pywinauto==0.6.8
+PyYAML==6.0
+requests==2.26.0
+setuptools==58.4.0
+SoundFile==0.10.3.post1
+SpeechRecognition==3.8.1
+win32gui==221.6
