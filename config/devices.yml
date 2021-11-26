@@ -32,6 +32,14 @@ Xmind:
   searchWord: camera
   type: Camera
 
+展示:
+  searchWord: PowerPoint
+  type: PowerPoint
+  superType: Software
+  keywords:
+      - 展示
+  execPath: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\PowerPoint.lnk
+
 
   
 

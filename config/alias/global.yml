@@ -69,7 +69,6 @@ Software:
     - 
       keys:
         - 启动
-        - 打开
       method: self.launch
 
 Camera:
@@ -81,12 +80,91 @@ Camera:
       method: self.launch
     - 
       keys:
-        - 关闭
         - 退出
+        - 关闭
       method: self.exit
     - 
       keys:
         - 拍照
       method: self.shot
+    - 
+      keys:
+        - 识别
+        - 检测
+      operations:
+        - 
+          keys:
+            - 手势
+          operations:
+            - 
+              keys:
+                - 打开
+                - 启动
+              method: self.open_detector_hands
+            -
+              keys:
+                - 关闭
+                - 退出
+              method: self.stop_detector_hands
+        - 
+          keys:
+            - 人脸
+            - 面部
+          operations:
+            - 
+              keys:
+                - 打开
+                - 启动
+              method: self.open_detector_face_mesh
+            -
+              keys:
+                - 关闭
+                - 退出
+              method: self.stop_detector_face_mesh
+          
+
+PowerPoint:
+  operations:
+    - 
+      keys:
+        - 新建
+      shotkeys:
+        - '^n'
+        - '%n'
+        - 'l'
+        - '1'
+    - 
+      keys:
+        - 最近
+      operations:
+        - 
+          keys:
+            - 打开
+          shotkeys:
+            - '%h'
+            - 'y'
+            - 'f'
+    - 
+      keys:
+        - 放映
+      operations:
+        - 
+          keys:
+            - 开始
+          shotkeys:
+            - '{F5}'
+    -
+      keys:
+        - 下一页
+        - 下一张
+      shotkeys:
+        - '{DONW}'
+    -
+      keys:
+        - 上一页
+        - 上一张
+      shotkeys:
+        - '{UP}'
+
 
 

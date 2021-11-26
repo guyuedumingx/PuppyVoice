@@ -19,8 +19,20 @@ class Handler:
         self.devices = [self.outputVoiceEngine]
         for name,config in configuration.devices.items():
             config['name'] = name
-            self.devices.append(eval(config['type'])(config))
+            if config.__contains__('type'):
+                if config.__contains__('superType'):
+                    cls = type(config['type'], (eval(config['superType'])(config).__class__,),{})
+                    self.devices.append(cls(config))
+                else:
+                    self.devices.append(eval(config['type'])(config))
+
         self.add_keywords_to_jieba()
+        
+        # self.chatbot = ChatBot("puppy")
+        # self.chatbot.set_trainer(ChatterBotCorpusTrainer)
+        
+        # 使用中文语料库训练它
+        # self.chatbot.train("chatterbot.corpus.chinese")
 
     
     def add_keywords_to_jieba(self):
@@ -64,10 +76,11 @@ class Handler:
         if not flag:
             try:
                 flag = self.lastMatchDevice.action(self)
-                if not flag:
-                    self.output("执行命令:{}, 失败!".format(self.words))
             except:
-                self.output("执行命令:{}, 失败!".format(self.words))
+                pass
+        if not flag:
+            self.output("执行命令:{}, 失败!".format(self.words))
+            # self.output(self.chatbot.get_response(self.words))
 
     
     

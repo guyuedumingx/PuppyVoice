@@ -8,9 +8,9 @@ import win32gui
 import win32con
 import pyttsx3
 import cv2
+import mediapipe as mp
 import threading
 import os
-
 
 configuration = Configuration()
 
@@ -97,8 +97,12 @@ class MetaModule:
             elif opera.hasMethod():
                 return eval(opera.method)(handler)
             elif opera.hasShotKeys():
-                for key in opera.shotkeys:
-                    send_keys(key)
+                try:
+                    # 调用了子类Window的方法，有很大的隐患
+                    return self.send_keys_to_window(handler, opera.shotkeys)
+                except:
+                    return False
+
         return False
 
     def initialize(self, config):
@@ -233,6 +237,19 @@ class Window(MetaModule):
         handler.output("{}窗口, 成功!".format(key+self.name))
         return True
     
+    def send_keys_to_window(self, handler, keys):
+        try:
+            h = self.handle
+        except:
+            success, h = self.get_handle(handler)
+        win32gui.SetActiveWindow(h)
+        win32gui.BringWindowToTop(h)
+        send_keys('%')
+        win32gui.SetForegroundWindow(h)
+        for key in keys:
+            send_keys(key)
+        return True
+    
     def post_message_to_window(self, handler, type):
         """
         发送信息到窗口
@@ -326,6 +343,30 @@ class Software(Window):
 
 
 class Camera(Window):
+
+    def initialize(self, config):
+        super().initialize(config)
+        self.handDetecting = False
+        self.faceMeshDetecting = False
+        self.mp_drawing = mp.solutions.drawing_utils
+        self.mp_drawing_styles = mp.solutions.drawing_styles
+        self.mp_hands = mp.solutions.hands
+
+        self.mp_drawing = mp.solutions.drawing_utils
+        self.mp_drawing_styles = mp.solutions.drawing_styles
+        self.mp_face_mesh = mp.solutions.face_mesh
+        self.drawing_spec = self.mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
+
+        self.hands = self.mp_hands.Hands(
+            model_complexity=0,
+            min_detection_confidence=0.5,
+            min_tracking_confidence=0.5)
+        self.face_mesh = self.mp_face_mesh.FaceMesh(
+            max_num_faces=1,
+            refine_landmarks=True,
+            min_detection_confidence=0.5,
+            min_tracking_confidence=0.5)
+
     """
     操作电脑的摄像头
     """
@@ -354,7 +395,8 @@ class Camera(Window):
             sucess,img=self.screen.read()
             self.img = cv2.flip(img, 1)
             #显示摄像头
-            cv2.imshow(self.searchWord, img)
+            cv2.namedWindow(self.searchWord, 0)
+            cv2.imshow(self.searchWord, self.detector(self.img))
             #保持画面的持续。
             k=cv2.waitKey(1)
             if not self.isRunning:
@@ -362,6 +404,74 @@ class Camera(Window):
         cv2.destroyAllWindows()
         self.screen.release()
     
+    def detector(self, img):
+        if self.handDetecting:
+            img = self._detector_hands_handle(img)
+        if self.faceMeshDetecting:
+            img = self._detector_face_mesh_handle(img)
+        return img
+    
+    def _detector_hands_handle(self, image):
+        results = self.hands.process(image)
+
+        image.flags.writeable = True
+        if results.multi_hand_landmarks:
+            for hand_landmarks in results.multi_hand_landmarks:
+                self.mp_drawing.draw_landmarks(
+                    image,
+                    hand_landmarks,
+                    self.mp_hands.HAND_CONNECTIONS,
+                    self.mp_drawing_styles.get_default_hand_landmarks_style(),
+                    self.mp_drawing_styles.get_default_hand_connections_style())
+        return image
+    
+    def _detector_face_mesh_handle(self, image):
+        results = self.face_mesh.process(image)
+        if results.multi_face_landmarks:
+            for face_landmarks in results.multi_face_landmarks:
+                self.mp_drawing.draw_landmarks(
+                    image=image,
+                    landmark_list=face_landmarks,
+                    connections=self.mp_face_mesh.FACEMESH_TESSELATION,
+                    landmark_drawing_spec=None,
+                    connection_drawing_spec=self.mp_drawing_styles
+                    .get_default_face_mesh_tesselation_style())
+                self.mp_drawing.draw_landmarks(
+                    image=image,
+                    landmark_list=face_landmarks,
+                    connections=self.mp_face_mesh.FACEMESH_CONTOURS,
+                    landmark_drawing_spec=None,
+                    connection_drawing_spec=self.mp_drawing_styles
+                    .get_default_face_mesh_contours_style())
+                self.mp_drawing.draw_landmarks(
+                    image=image,
+                    landmark_list=face_landmarks,
+                    connections=self.mp_face_mesh.FACEMESH_IRISES,
+                    landmark_drawing_spec=None,
+                    connection_drawing_spec=self.mp_drawing_styles
+                    .get_default_face_mesh_iris_connections_style())
+        return image
+
+    
+    def open_detector_hands(self, handler):
+        self.handDetecting = True
+        handler.output('打开成功')
+        return True
+
+    def stop_detector_hands(self, handler):
+        self.handDetecting = False
+        handler.output('关闭成功')
+        return True
+    
+    def open_detector_face_mesh(self, handler):
+        self.faceMeshDetecting = True
+        handler.output('打开成功')
+        return True
+    
+    def stop_detector_face_mesh(self, handler):
+        self.faceMeshDetecting = False 
+        handler.output('关闭成功')
+        return True
 
 class ExternalDevice(MetaModule):
     """
@@ -370,5 +480,3 @@ class ExternalDevice(MetaModule):
     def initialize(self, config):
         self.host = config.get('host','')
         self.port = config.get('port',8899)
-
-

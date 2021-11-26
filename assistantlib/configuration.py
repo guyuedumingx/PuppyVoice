@@ -3,7 +3,6 @@ import os
 from copy import deepcopy
 import yaml
 
-GLOBAL_CONFIGURATION = 'assistant.yml'
 USER_CONFIGURATIONS = ['alias/global.yml']
 CONFIGURATION_PATH = 'config'
 DEVICES_FILE = 'devices.yml'
@@ -23,6 +22,7 @@ class Configuration:
     def __init__(self):
         self.configurations = {}
         self.devices = self.load_file(DEVICES_FILE)
+        self.pet = None
         for file in USER_CONFIGURATIONS:
             self.userConfig = self.load_file(file)
             self.configurations = dict(self.configurations, **self.userConfig)
