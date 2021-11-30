@@ -164,5 +164,14 @@ PowerPoint:
       shotkeys:
         - '{UP}'
 
-
+Website:
+  operations:
+    - 
+      keys:
+        - 搜索
+      method: self.search
+    -
+      keys:
+        - 打开
+      method: self.open
 

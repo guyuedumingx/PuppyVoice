@@ -6,6 +6,7 @@ from pywinauto.keyboard import send_keys
 import jieba
 import win32gui
 import win32con
+import win32api
 import pyttsx3
 import cv2
 import mediapipe as mp
@@ -340,6 +341,31 @@ class Software(Window):
         os.startfile(self.execPath)
         handler.output("{},{} 成功!".format(handler.matchs[-1], self.name))
         return True
+
+
+class Website(Window):
+    
+    def initialize(self, config):
+        self.baseUrl = config.get('baseUrl','')
+        self.searchUrl= config.get('searchUrl','')
+
+    def open(self, handler):
+        self.exec(self.baseUrl)
+        self.searchWord = self.word
+        handler.output("{}{},成功".format(handler.matchs[-1], self.name))
+        return True
+    
+    def search(self, handler):
+        key = handler.matchs[-1]
+        self.word = re.findall(key+'(.*)',handler.words)[0]
+        self.searchWord = self.word
+        url = self.searchUrl.replace("{query}",self.word)
+        self.exec(url)
+        handler.output("{}{},成功".format(key,self.word))
+        return True
+
+    def exec(self, url):
+        win32api.ShellExecute(0, 'open', url,"","",1)
 
 
 class Camera(Window):

@@ -49,5 +49,15 @@ Xmind:
   execPath: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\PowerPoint.lnk
 
 
+百度:
+  type: Website
+  baseUrl: http://www.baidu.com
+  searchUrl: https://www.baidu.com/s?wd={query}
+
+必应:
+  type: Website
+  baseUrl: https://cn.bing.com
+  searchUrl: https://cn.bing.com/search?q={query}
+
   
 
