@@ -1,6 +1,7 @@
 from assistantlib.configuration import Configuration
 from assistantlib.build_in import *
 from config.constants import *
+from win10toast import ToastNotifier
 import re
 
 configuration = Configuration()
@@ -18,6 +19,7 @@ class Handler:
             "instruction": "我是一个语言助手哦"
         })
         self.devices = [self.outputVoiceEngine]
+        self.toaster = ToastNotifier()
         for name,config in configuration.devices.items():
             config['name'] = name
             if config.__contains__('type'):
@@ -38,11 +40,14 @@ class Handler:
             for key in device.keywords:
                 jieba.add_word(key)
     
-    def output(self, msg, mode=OUTPUT_MODE):
+    def output(self, msg, mode=OUTPUT_MODE, title='Puppy Notice'):
         if 'voice' == mode:
             self.outputVoiceEngine.show(msg)
         elif 'console' == mode:
             print(msg)
+        elif 'toast' == mode:
+            self.toaster.show_toast(title, msg, icon_path="./resources/puppy.ico",duration=5,threaded=True)
+            # self.toaster.show_toast(title, msg,duration=5, threaded=True)
 
     def wordSegmentation(self, words):
         """
@@ -75,6 +80,7 @@ class Handler:
                 pass
         if not flag:
             self.output("执行命令:{}, 失败!".format(self.words))
+        self.output(self.words,title=str(flag), mode='toast')
 
     
     

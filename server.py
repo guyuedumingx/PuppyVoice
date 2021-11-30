@@ -24,10 +24,6 @@ def deal_remote_text(conn, addr):
             break
 
 def deal_remote_voice(conn, addr):
-    # stream = p.open(format=p.get_format_from_width(2),
-    #                 channels=CHANNELS,
-    #                 rate=RATE,
-    #                 output=False)
     wf = wave.open(WAVFILENAME,"wb")
     wf.setnchannels(2)
     wf.setsampwidth(p.get_sample_size(p.get_format_from_width(2)))
@@ -35,11 +31,8 @@ def deal_remote_voice(conn, addr):
     ret = conn.recv(1024)
     while ret != b'':
         wf.writeframes(ret)
-        # stream.write(ret)
         ret = conn.recv(1024)
     wf.close()
-    # stream.stop_stream()
-    # stream.close()
     conn.close()
 
     recognition = VoiceToText()
@@ -54,7 +47,6 @@ def deal_local_text():
     while "text" == INPUT_MODE and "local" == INPUT_POSITION:
         msg = input(">>>")    
         handler.handle(msg)
-
 
 while True:
     if "remote" == INPUT_POSITION:
