@@ -70,6 +70,16 @@ Software:
       keys:
         - 启动
       method: self.launch
+    - 
+      keys:
+        - 输入
+      method: self.sendText
+    - 
+      keys:
+        - 全选
+      shotkeys:
+        - '^a'
+      
 
 Camera:
   operations:
@@ -175,3 +185,149 @@ Website:
         - 打开
       method: self.open
 
+Typora:
+  operations:
+    - 
+      keys:
+        - 删除
+      shotkeys:
+        - '{BS}'
+    - 
+      keys:
+        - 跳转
+      operations:
+        - 
+          keys:
+            - 行首
+          shotkeys:
+            - '^{HOME}'
+        - 
+          keys:
+            - 行末
+            - 文末
+          shotkeys:
+            - '^{END}'
+    - 
+      keys:
+        - 选择
+      operatiaons:
+        - 
+          keys:
+            - 当前
+          shotkeys:
+            - '^l'
+    - 
+      keys:
+        - 视图
+      operations:
+        - 
+          keys:
+            - 切换
+          operations:
+            - 
+              keys:
+                - 大纲
+              shotkeys:
+                - '^+1'
+            - 
+              keys:
+                - 文件列表
+              shotkeys:
+                - '^+2'
+    -
+      keys:
+        - 格式
+      operations:
+        - 
+          keys:
+            - 加粗
+          shotkeys:
+            - '^b'
+        - 
+          keys:
+            - 斜体
+          shotkeys:
+            - '^i'
+        - 
+          keys:
+            - 下划线
+          shotkeys:
+            - '^u'
+        - 
+          keys:
+            - 代码
+          shotkeys:
+            - '^+`'
+        - 
+          keys:
+            - 删除线
+          shotkeys:
+            - '%+5'
+        - 
+          keys:
+            - 清除
+          shotkeys:
+            - '^\'
+    - 
+      keys:
+        - 标题
+      operations:
+        - 
+          keys:
+            - 一级
+          shotkeys:
+            - '^1'
+        - 
+          keys:
+            - 二级
+          shotkeys:
+            - '^2'
+        - 
+          keys:
+            - 三级
+          shotkeys:
+            - '^3'
+        - 
+          keys:
+            - 四级
+          shotkeys:
+            - '^4'
+        - 
+          keys:
+            - 五级
+          shotkeys:
+            - '^5'
+        - 
+          keys:
+            - 六级
+          shotkeys:
+            - '^6'
+    -
+      keys:
+        - 列表
+      operations:
+        - 
+          keys:
+            - 有序
+          shotkeys:
+            - '^+['
+        - 
+          keys:
+            - 无序
+          shotkeys:
+            - '^+]'
+    -
+      keys:
+        - 引用
+      shotkeys:
+        - '^+q'
+    -
+      keys:
+        - 段落
+      shotkeys:
+        - '^0'
+            
+
+        
+
+      

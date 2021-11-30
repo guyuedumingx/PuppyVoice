@@ -341,6 +341,13 @@ class Software(Window):
         os.startfile(self.execPath)
         handler.output("{},{} 成功!".format(handler.matchs[-1], self.name))
         return True
+    
+    def sendText(self, handler):
+        res = handler.words.split("输入")
+        if len(res) > 1:
+            text = "".join(res[1::])
+            self.send_keys_to_window(handler,[text])
+        return True
 
 
 class Website(Window):
@@ -478,7 +485,6 @@ class Camera(Window):
                     .get_default_face_mesh_iris_connections_style())
         return image
 
-    
     def open_detector_hands(self, handler):
         self.handDetecting = True
         handler.output('打开成功')
@@ -506,3 +512,4 @@ class ExternalDevice(MetaModule):
     def initialize(self, config):
         self.host = config.get('host','')
         self.port = config.get('port',8899)
+

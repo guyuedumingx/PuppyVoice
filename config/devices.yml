@@ -14,8 +14,10 @@ Typora:
   keywords:
     - 笔记
   execPath: F:\Typora\Typora.exe
-  type: Software
+  type: Typora
+  superType: Software
   instruction: 我现在可以操作笔记了哦
+  searchWord: Typora
 
 Xmind:
   keywords:
