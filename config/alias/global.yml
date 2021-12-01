@@ -73,6 +73,7 @@ Software:
     - 
       keys:
         - 输入
+        - 写
       method: self.sendText
     - 
       keys:

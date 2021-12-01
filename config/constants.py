@@ -42,9 +42,9 @@ OUTPUT_MODE = "voice"
 输入来源
 """
 # 输出模式， 语音模式: voice 文本输入模式: text
-INPUT_MODE = "voice"
+INPUT_MODE = "text"
 # 输入的位置， 来自本地的输入: local 来自端口的输入: remote
-INPUT_POSITION = "remote"
+INPUT_POSITION = "local"
 
 """
 使用百度语音识别

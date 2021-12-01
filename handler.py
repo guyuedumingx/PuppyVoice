@@ -79,8 +79,8 @@ class Handler:
             except:
                 pass
         if not flag:
+            self.output(self.words,title=str(flag), mode='toast')
             self.output("执行命令:{}, 失败!".format(self.words))
-        self.output(self.words,title=str(flag), mode='toast')
 
     
     

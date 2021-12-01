@@ -1,5 +1,8 @@
 ## 自制智障语音助手  
 
+### Quick Start  
+
+
 ### 运行  
 1. 去百度AI开放平台`https://ai.baidu.com/tech/speech/asr`注册  
 2. 得到百度AI开放平台语音识别的`APP_ID`, `API_KEY`, `SCRET_KEY`
