@@ -12,4 +12,4 @@ requests==2.26.0
 setuptools==58.4.0
 SoundFile==0.10.3.post1
 SpeechRecognition==3.8.1
-win32gui==221.6
+pywin32
