@@ -1,9 +1,11 @@
 ## 自制智障语音助手  
 
 ### Quick Start  
-1. 在终端运行命令`pip install -r requirements.txt`
-2. 运行`server.py`文件  
-3. `order.md`文件中包含一些基本的命令
+1. `git clone git@github.com:guyuedumingx/assistant.git`  
+2. `cd assistant`  
+3. 在终端运行命令`pip install -r requirements.txt`
+4. 运行`server.py`文件  
+5. `order.md`文件中包含一些基本的命令
 
 示例
 ```
@@ -43,20 +45,11 @@ INPUT_POSITION = "remote"
 6. 在手机上安装`voices.apk`软件, 并根据`server.py`文件运行时显示的服务器`host`设置`host`  
 7. enjoy
 
-### 包详解  
-```
-config -- 配置包
-handler.py -- 指令的分词并调用对应元件执行
-server.py -- 程序入口  
-requirements.txt -- 项目所需的python依赖  
-```
-
 ### 配置  
 项目的所有配置文件都在`config`包里
 
 1. `alias/global.yml`文件是全局配置文件, 负责配置一些内置的指令  
 2. `constants.py`文件包含一些程序运行时需要的常量  
-3. `user-config.yml`文件是用户自定义配置文件, 你可以在使用过程中根据需要进行配置  
 
 您可以自主添加需要的配置文件, 并在`config/constants.py`中添加即可  
 ```python  
@@ -64,103 +57,44 @@ USER_CONFIGURATIONS = ["user-config.yml","website-config.json"]
 ```
 
 ### 配置自己的指令  
-如果需要配置本身不存在的指令， 那么您可以选择自定义一个类(推荐您在`modules/user_modules.py`文件中定义)并继承元组件库中的对象，自定义需要的操作  
-例如：  
+如果需要配置本身不存在的指令， 那么您可以选择自定义一个类(推荐您在`assistantlib/UserModule.py`文件中定义)并继承元组件库(`build_in.py`)中的对象，自定义需要的操作  
 
-`config/user-config.json`
-```json
-"PowerPoint": {
-    "execPath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PowerPoint.lnk",
-    "keywords": ["展示"],
-    "searchWord": "PowerPoint",
-    "operations": [
-        {
-            "keys": ["新建"],
-            "shotkeys": ["^n", "%n", "l", "1"]
-        },
-        {
-            "keys": ["打开"],
-            "sub": [
-                {
-                    "keys":["最近"],
-                    "shotkeys": ["%h", "y","f"]
-                }
-            ]
-        }
-    ]
-}
-```
-
-- `keywords`: 命令的关键字  
-- `searchWord`: 搜索窗口时的关键字， 打开一个`window`窗口时的窗口标题，本软件根据窗口标题来找到对应窗口， 比如说`PowerPoint`窗口里一定有`powerpoint`这个单词  
-- `operations`: 这个类支持的指令  
-    - `keys`: 指令的关键词  
-    - `shotkeys`: 发送快捷键到窗口  
-    - `operations`: 多层指令，可以由父指令递归下去
-    - `method`: 执行的函数
-
-```json
-{
-    "keys": ["打开"],
-    "sub": [
-        {
-            "keys":["最近"],
-            "shotkeys": ["%h", "y","f"]
-        },
-        {
-            "keys":["全部"],
-            "method": "self.hole"
-        }
-    ]
-}
-```
-
-```yml
-PowerPoint:
+比如
+```yaml
+Camera:
   operations:
     - 
       keys:
-        - 新建
-      shotkeys:
-        - '^n'
-        - '%n'
-        - 'l'
-        - '1'
+        - 启动
+      method: self.launch
     - 
       keys:
-        - 最近
-      operations:
-        - 
-          keys:
-            - 打开
-          shotkeys:
-            - '%h'
-            - 'y'
-            - 'f'
+        - 退出
+      method: self.exit
     - 
       keys:
-        - 放映
-      operations:
-        - 
-          keys:
-            - 开始
-          shotkeys:
-            - '{F5}'
-    -
-      keys:
-        - 下一页
-        - 下一张
-      shotkeys:
-        - '{DONW}'
-    -
-      keys:
-        - 上一页
-        - 上一张
-      shotkeys:
-        - '{UP}'
+        - 拍照
+      method: self.shot
+```
+除了`method`外，你还可以设置`shotkeys`，但是`method`和`shotkeys`应当只存在一个，否则将默认执行`method`  
+配置需要和存在的类同名，或在`devices.yml`中配置`superType`, 您可以参考我的有关`展示`的配置  
+> 命令的配置您可以在`global.yml`中找到示范  
+
+然后您需要在`devices.yml`文件中配置您的设备  
+
+```yaml
+相机:
+  keywords:
+    - 相机
+    - 摄像头
+  searchWord: camera
+  type: Camera
 ```
 
-这里的`打开`就可以分两种情况, 一种是`打开全部`, 另一种是`打开最近`  
+`Type`: 表示它的类别  
+`searchWord`: 表示它的窗口中含有的关键字， 比如微信的窗口名称是微信，ppt 的窗口名称中一定有`PowerPoint`   
+`keyswords`: 是一个列表，是触发该设备的关键字  
+
 
 ### 快捷键列表  
 ```
@@ -195,6 +129,14 @@ UP   ARROW                       {UP}
 /                                {DIVIDE}
 ```
 
+### 包详解  
+```
+config -- 配置包
+handler.py -- 指令的分词并调用对应元件执行
+server.py -- 程序入口  
+requirements.txt -- 项目所需的python依赖  
+```
+
 ### Build_in文件详解  
 
 `MetaModule`: 元组件，是所有组件的父类，定义了指令运行的逻辑  
@@ -202,3 +144,6 @@ UP   ARROW                       {UP}
 `Window`: 所有`window`窗口的公有父类  
 `Camera`: 提供了电脑本身摄像头的支持  
 `Software`: 所有软件的公有父类  
+
+### 理解程序  
+在`server.py`或`build_in.py`的`MetaModule`中打个断点调试一下  
