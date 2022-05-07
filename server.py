@@ -40,8 +40,11 @@ def deal_remote_voice(conn, addr):
     handler.handle(words)
 
 def deal_local_voice():
+    #TODO
+    """
+    实现电脑本地录音转换为指令
+    """
     pass
-
 
 def deal_local_text():
     while "text" == INPUT_MODE and "local" == INPUT_POSITION:
