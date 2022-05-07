@@ -87,7 +87,7 @@ class RequestApi(object):
 
     # 请求和结果解析，结果中各个字段的含义可参考：https://doc.xfyun.cn/rest_api/%E8%AF%AD%E9%9F%B3%E8%BD%AC%E5%86%99.html
     def gene_request(self, apiname, data, files=None, headers=None):
-        response = requests.post(lfasr_host + apiname, data=data, files=files, headers=headers)
+        response = requests.post(LFASRHOST + apiname, data=data, files=files, headers=headers)
         result = json.loads(response.text)
         if result["ok"] == 0:
             return result
@@ -140,7 +140,7 @@ class RequestApi(object):
 
     # 获取结果
     def get_result_request(self, taskid):
-        return self.gene_request(API_GET_RESULT, data=self.gene_params(api_get_result, taskid=taskid))
+        return self.gene_request(API_GET_RESULT, data=self.gene_params(API_GET_RESULT, taskid=taskid))
 
     def all_api_request(self):
         # 1. 预处理
