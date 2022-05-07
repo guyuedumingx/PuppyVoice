@@ -1,11 +1,11 @@
-## 自制智障语音助手  
+## PuppyVoice -- 可编程跨平台语音助手
 
 ### Quick Start  
 1. `git clone git@github.com:guyuedumingx/assistant.git`  
 2. `cd assistant`  
 3. 在终端运行命令`pip install -r requirements.txt`
 4. 运行`server.py`文件  
-5. `order.md`文件中包含一些基本的命令
+5. `resources/order.md`文件中包含一些基本的命令
 
 示例
 ```
@@ -32,7 +32,7 @@ INPUT_MODE = "voice"
 # 输入的位置， 来自本地的输入: local 来自端口的输入: remote
 INPUT_POSITION = "remote"
 ```
-在手机上安装`voices.apk`软件, 并根据`server.py`文件运行时显示的服务器`host`设置`host`  
+在手机上安装`resources/voices.apk`软件, 并根据`server.py`文件运行时显示的服务器`host`设置`host`  
 
 > 手机和电脑需要在同一个局域网内
 
@@ -132,6 +132,8 @@ UP   ARROW                       {UP}
 ### 包详解  
 ```
 config -- 配置包
+resources -- 资源包
+assistantlib -- 元组件库
 handler.py -- 指令的分词并调用对应元件执行
 server.py -- 程序入口  
 requirements.txt -- 项目所需的python依赖  
