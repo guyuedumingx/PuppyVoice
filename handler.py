@@ -12,7 +12,6 @@ class Handler:
     self.opera : 分词后的关键词集合
     self.matchs : 匹配到的关键词列表
     """
-
     def __init__(self):
         self.outputVoiceEngine = Puppy({
             "keywords":["小狗"],

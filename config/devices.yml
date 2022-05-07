@@ -34,14 +34,6 @@ Xmind:
   searchWord: camera
   type: Camera
 
-人脸演示:
-  keywords:
-    - 人脸演示
-    - 演示
-  type: Software
-  execPath: E:\npython\nassistant\resources\face-mesh.mp4
-  searchWord: 电影和电视
-
 展示:
   searchWord: PowerPoint
   type: PowerPoint
@@ -50,7 +42,6 @@ Xmind:
       - 展示
       - 涨势
   execPath: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\PowerPoint.lnk
-
 
 百度:
   type: Website
