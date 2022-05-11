@@ -2,6 +2,7 @@
 from copy import deepcopy
 import re
 from assistantlib.configuration import Configuration
+from config.constants import *
 from pywinauto.keyboard import send_keys
 import jieba
 import win32gui
@@ -522,10 +523,10 @@ class ExternalDevice(MetaModule):
 
 class HttpDevice(MetaModule):
     """
-    远程Http客户端
+    远程Http方式工作的外围设备
     """
     def initialize(self, config):
-        self.url = config.get('url','http://127.0.0.1:8899')
+        self.url = config.get('url',REMOTE_SERVER_URL)
         self.id = config.get('id','')
 
     def getId(self):

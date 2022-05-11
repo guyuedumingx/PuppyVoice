@@ -9,6 +9,9 @@ PORT = 8898
 # 监听的主机地址(也就是本机的地址)
 HOST = socket.gethostbyname(socket.gethostname())
 
+# 远程服务器地址
+REMOTE_SERVER_URL = 'http://127.0.0.1:8899'
+
 # 临时的语音文件名
 WAVFILENAME = "record.wav"
 
