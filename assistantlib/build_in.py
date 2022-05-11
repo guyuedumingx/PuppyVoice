@@ -11,15 +11,20 @@ import pyttsx3
 import cv2
 import mediapipe as mp
 import threading
+import requests
 import os
 
 configuration = Configuration()
 
 
 class MetaModule:
+    """
+    元组件
+    """
 
     def __init__(self, config):
         self._build({})
+        self.config = config
         self.name = config.get('name', '')
         self.keywords = set(config.get('keywords',[self.name]))
         self.instruction = config.get('instruction','这是一个组件')
@@ -99,7 +104,7 @@ class MetaModule:
                 return eval(opera.method)(handler)
             elif opera.hasShotKeys():
                 try:
-                    # 调用了子类Window的方法，有很大的隐患
+                    # 调用了子类Windows的方法，有很大的隐患
                     return self.send_keys_to_window(handler, opera.shotkeys)
                 except:
                     return False
@@ -505,6 +510,7 @@ class Camera(Window):
         handler.output('关闭成功')
         return True
 
+
 class ExternalDevice(MetaModule):
     """
     适用于外围设备的接口
@@ -512,4 +518,38 @@ class ExternalDevice(MetaModule):
     def initialize(self, config):
         self.host = config.get('host','')
         self.port = config.get('port',8899)
+
+
+class HttpServer(MetaModule):
+    """
+    远程Http服务器
+    """
+    def initialize(self, config):
+        self.url = config.get('url','')
+        self.getId()
+
+    def getId(self):
+        """
+        从服务器获取id编号
+        """
+        self.id = requests.get(self.url+'/id').text
+    
+    def send(self, handler):
+        data = {
+            'words':handler.words,
+            'opera':handler.opera,
+            'matchs':handler.matchs,
+        }
+        requests.post(self.url+'/message',data=data)
+
+    def receive(self, handler):
+        """
+        本地应只负责发送消息，不负责接收消息，该方法的实现只为测试
+        """
+        params = {
+            'id':self.id,
+        }
+        msg = requests.get(self.url+'/message',params)
+        # 读出返回的信息
+        handler.output(msg.text)
 
