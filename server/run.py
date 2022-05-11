@@ -1,7 +1,7 @@
 #服务器端  
 from flask import Flask
 from flask import request
-from multiprocessing import Process, Queue
+from multiprocessing import Queue
 
 app = Flask(__name__)
 
