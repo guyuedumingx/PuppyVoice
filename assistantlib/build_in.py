@@ -536,6 +536,7 @@ class HttpServer(MetaModule):
     
     def send(self, handler):
         data = {
+            'id':self.id,
             'words':handler.words,
             'opera':handler.opera,
             'matchs':handler.matchs,
