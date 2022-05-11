@@ -13,6 +13,8 @@ def add_msg():
     if(id_maps.get(data.get("id")) is None):
         id_maps[data.get("id")] = Queue()
     id_maps[data.get("id")].put(data)
+    print(data)
+    return ""
 
 
 @app.route("/message", methods=["GET"])
@@ -22,8 +24,11 @@ def custom_msg():
         "success": False,
         "msg": ""
     }
-    if(id_maps.get(id) is None or id_maps[id].empty()):
-        data["msg"] = "没有消息"
+    print(id_maps)
+    if not id_maps.__contains__(id):
+        data["msg"] = "no id"
+    elif id_maps[id].empty():
+        data["msg"] = "no message"
     else:
         data["success"] = True
         data["msg"] = id_maps[id].get()

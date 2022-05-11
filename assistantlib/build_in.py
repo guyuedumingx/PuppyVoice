@@ -520,37 +520,43 @@ class ExternalDevice(MetaModule):
         self.port = config.get('port',8899)
 
 
-class HttpServer(MetaModule):
+class HttpDevice(MetaModule):
     """
-    远程Http服务器
+    远程Http客户端
     """
     def initialize(self, config):
-        self.url = config.get('url','')
-        self.getId()
+        self.url = config.get('url','http://127.0.0.1:8899')
+        self.id = config.get('id','')
 
     def getId(self):
         """
         从服务器获取id编号
+        废弃方法
         """
         self.id = requests.get(self.url+'/id').text
     
-    def send(self, handler):
-        data = {
+    def send(self, handler, data = {}):
+        msg = {
             'id':self.id,
             'words':handler.words,
             'opera':handler.opera,
             'matchs':handler.matchs,
         }
+        data.update(msg)
         requests.post(self.url+'/message',data=data)
+        return True
+    
+    def open(self, handler):
+        self.send(handler,{'operaName':'open'})
 
-    def receive(self, handler):
-        """
-        本地应只负责发送消息，不负责接收消息，该方法的实现只为测试
-        """
-        params = {
-            'id':self.id,
-        }
-        msg = requests.get(self.url+'/message',params)
-        # 读出返回的信息
-        handler.output(msg.text)
+    # def receive(self, handler):
+    #     """
+    #     本地应只负责发送消息，不负责接收消息，该方法的实现只为测试
+    #     """
+    #     params = {
+    #         'id':self.id,
+    #     }
+    #     msg = requests.get(self.url+'/message',params)
+    #     # 读出返回的信息
+    #     handler.output(msg.text)
 

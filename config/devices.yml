@@ -1,10 +1,10 @@
-Device2:
-  keywords:
-    - 二号灯
-  type: ExternalDevice
-  instruction: 这是二号灯
-  host: 192.168.0.1
-  port: 8888
+# Device2:
+#   keywords:
+#     - 二号灯
+#   type: ExternalDevice
+#   instruction: 这是二号灯
+#   host: 192.168.0.1
+#   port: 8888
 
 微信:
   type: Window
@@ -53,5 +53,12 @@ Xmind:
   baseUrl: https://cn.bing.com
   searchUrl: https://cn.bing.com/search?q={query}
 
+灯:
+  type: Light 
+  superType: HttpDevice
+  id: 1
+  keywords: 
+    - 灯
+    - 一号灯
   
 

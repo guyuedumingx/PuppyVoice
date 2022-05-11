@@ -9,9 +9,8 @@ def deal(msg):
 
 if __name__ == '__main__':
     while True:
-        params = {id:'1'}
+        params = {'id':'1'}
         data = requests.get(url+'/message', params).json()
-        print(data)
         if(data['success']):
             deal(data['msg'])
         else:
