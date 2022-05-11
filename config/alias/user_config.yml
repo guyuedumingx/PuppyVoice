@@ -3,4 +3,13 @@ Light:
     -
       keys:
         - 打开
+        - 开
       method: self.open
+
+  operations:
+    -
+      keys:
+        - 关 
+        - 关闭
+      method: self.close
+
