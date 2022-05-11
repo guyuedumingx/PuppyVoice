@@ -1,10 +1,11 @@
 ## PuppyVoice -- 可编程跨平台语音助手
 
+
 ### Quick Start  
-1. `git clone git@github.com:guyuedumingx/assistant.git`  
-2. `cd assistant`  
+1. `git clone git@github.com:guyuedumingx/puppyvoice.git`  
+2. `cd puppyvoice`  
 3. 在终端运行命令`pip install -r requirements.txt`
-4. 运行`server.py`文件  
+4. 运行`main.py`文件  
 5. `resources/order.md`文件中包含一些基本的命令
 
 示例
@@ -32,7 +33,7 @@ INPUT_MODE = "voice"
 # 输入的位置， 来自本地的输入: local 来自端口的输入: remote
 INPUT_POSITION = "remote"
 ```
-在手机上安装`resources/voices.apk`软件, 并根据`server.py`文件运行时显示的服务器`host`设置`host`  
+在手机上安装`resources/voices.apk`软件, 并根据`main.py`文件运行时显示的服务器`host`设置`host`  
 
 > 手机和电脑需要在同一个局域网内
 
@@ -41,8 +42,8 @@ INPUT_POSITION = "remote"
 2. 得到百度AI开放平台语音识别的`APP_ID`, `API_KEY`, `SCRET_KEY`
 3. 打开本项目`config`文件夹下面的`constants.py`文件, 替换里面的`BAIDU_APP_ID`, `BAIDU_API_KEY`, `BAIDU_SCRET_KEY`
 4. 在终端运行命令`pip install -r requirements.txt`
-5. 运行`server.py`文件  
-6. 在手机上安装`voices.apk`软件, 并根据`server.py`文件运行时显示的服务器`host`设置`host`  
+5. 运行`main.py`文件  
+6. 在手机上安装`voices.apk`软件, 并根据`main.py`文件运行时显示的服务器`host`设置`host`  
 7. enjoy
 
 ### 配置  
@@ -129,13 +130,17 @@ UP   ARROW                       {UP}
 /                                {DIVIDE}
 ```
 
+### TODO
+- [] 关键词优先级匹配
+  - 树形结构
+
 ### 包详解  
 ```
 config -- 配置包
 resources -- 资源包
 assistantlib -- 元组件库
 handler.py -- 指令的分词并调用对应元件执行
-server.py -- 程序入口  
+main.py -- 程序入口  
 requirements.txt -- 项目所需的python依赖  
 ```
 
@@ -148,4 +153,4 @@ requirements.txt -- 项目所需的python依赖
 `Software`: 所有软件的公有父类  
 
 ### 理解程序  
-在`server.py`或`build_in.py`的`MetaModule`中打个断点调试一下  
+在`main.py`或`build_in.py`的`MetaModule`中打个断点调试一下  

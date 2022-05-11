@@ -94,6 +94,9 @@ class MetaModule:
         return self._execHandle(handler, self.operations)
     
     def _execHandle(self, handler, operations):
+        """
+        关键词的匹配是一层一层往下递归的，这样会大大降低自然语言的二义性问题
+        """
         match = handler.opera & set(operations.keys())
         if len(match) > 0:
             key = match.pop()
