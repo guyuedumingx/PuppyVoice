@@ -544,12 +544,13 @@ class HttpDevice(MetaModule):
             'matchs':handler.matchs,
         }
         data.update(msg)
-        requests.post(self.url+'/message',data=data)
-        return True
+        try:
+            requests.post(self.url+'/message',data=data)
+            return True
+        except:
+            handler.output('操作失败')
+            return False
     
-    def open(self, handler):
-        self.send(handler,{'operaName':'open'})
-
     # def receive(self, handler):
     #     """
     #     本地应只负责发送消息，不负责接收消息，该方法的实现只为测试
@@ -560,4 +561,7 @@ class HttpDevice(MetaModule):
     #     msg = requests.get(self.url+'/message',params)
     #     # 读出返回的信息
     #     handler.output(msg.text)
+
+
+
 

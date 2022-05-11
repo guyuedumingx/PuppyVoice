@@ -55,7 +55,6 @@ Xmind:
 
 灯:
   type: Light 
-  superType: HttpDevice
   id: 1
   keywords: 
     - 灯

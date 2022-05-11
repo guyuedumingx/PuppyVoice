@@ -3,6 +3,15 @@ from assistantlib.build_in import *
 from config.constants import *
 from win10toast import ToastNotifier
 import re
+import pkgutil
+
+# 导入所有用户模块
+pkgpath = os.path.dirname(__file__)+os.sep+"modules"
+pkgname = os.path.basename(pkgpath)
+
+for _, file, _ in pkgutil.iter_modules([pkgpath]):
+    exec('from '+pkgname+'.'+file+' import *')
+
 
 configuration = Configuration()
 
