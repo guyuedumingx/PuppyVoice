@@ -18,7 +18,7 @@ WAVFILENAME = "record.wav"
 """
 配置加载
 """
-USER_CONFIGURATIONS = ['alias/global.yml']
+USER_CONFIGURATIONS = ['alias/global.yml','user_config.yml']
 CONFIGURATION_PATH = 'config'
 DEVICES_FILE = 'devices.yml'
 

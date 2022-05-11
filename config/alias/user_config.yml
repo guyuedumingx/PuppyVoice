@@ -1,0 +1,6 @@
+Light:
+  operations:
+    -
+      keys:
+        - 打开
+      method: self.open
