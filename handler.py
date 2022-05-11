@@ -70,6 +70,9 @@ class Handler:
         return res
     
     def handle(self, words):
+        """
+        TODO: 引入pytorch模型作为匹配失败情况下的补充，根据词性分词，名词用来匹配devices，其他用来匹配keywords
+        """
         # 分词后的关键词集合
         self.opera = self.wordSegmentation(words)
         flag = False
