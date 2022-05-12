@@ -1,0 +1,61 @@
+{
+    "微信": {
+        "type": "Window",
+        "instruction": "我可以操作微信哦"
+    },
+    "Typora": {
+        "keywords": [
+            "笔记"
+        ],
+        "execPath": "F:\\Typora\\Typora.exe",
+        "type": "Typora",
+        "superType": "Software",
+        "instruction": "我现在可以操作笔记了哦",
+        "searchWord": "Typora"
+    },
+    "Xmind": {
+        "keywords": [
+            "导图",
+            "思维导图"
+        ],
+        "execPath": "C:\\Program Files\\XMind\\XMind.exe",
+        "type": "Software",
+        "instruction": "我现在可以操作导图了哦"
+    },
+    "相机": {
+        "keywords": [
+            "相机",
+            "摄像头"
+        ],
+        "searchWord": "camera",
+        "type": "Camera"
+    },
+    "展示": {
+        "searchWord": "PowerPoint",
+        "type": "PowerPoint",
+        "superType": "Software",
+        "keywords": [
+            "展示",
+            "涨势"
+        ],
+        "execPath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PowerPoint.lnk"
+    },
+    "百度": {
+        "type": "Website",
+        "baseUrl": "http://www.baidu.com",
+        "searchUrl": "https://www.baidu.com/s?wd={query}"
+    },
+    "必应": {
+        "type": "Website",
+        "baseUrl": "https://cn.bing.com",
+        "searchUrl": "https://cn.bing.com/search?q={query}"
+    },
+    "灯": {
+        "type": "Light",
+        "id": 1,
+        "keywords": [
+            "灯",
+            "一号灯"
+        ]
+    }
+}
